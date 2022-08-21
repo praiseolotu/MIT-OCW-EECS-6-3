@@ -66,6 +66,14 @@ def is_word_guessed(secret_word, letters_guessed):
 
 
 def get_guessed_word(secret_word, letters_guessed):
+    counter = 0
+    for index in range(len(secret_word)):
+        if secret_word[index] in letters_guessed:
+	    counter += 0
+    if counter == secret_word:
+	return True
+    else:
+	return False
     '''
     secret_word: string, the word the user is guessing
     letters_guessed: list (of letters), which letters have been guessed so far
@@ -73,7 +81,7 @@ def get_guessed_word(secret_word, letters_guessed):
       which letters in secret_word have been guessed so far.
     '''
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    
 
 
 
