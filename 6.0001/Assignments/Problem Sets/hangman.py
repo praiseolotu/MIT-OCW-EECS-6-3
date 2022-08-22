@@ -69,8 +69,8 @@ def get_guessed_word(secret_word, letters_guessed):
     counter = 0
     for index in range(len(secret_word)):
         if secret_word[index] in letters_guessed:
-	    counter += 0
-    if counter == secret_word:
+	    counter += 1
+    if counter == len(secret_word):
 	return True
     else:
 	return False
