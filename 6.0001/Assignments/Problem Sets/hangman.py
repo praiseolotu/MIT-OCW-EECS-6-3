@@ -52,20 +52,6 @@ wordlist = load_words()
 
 
 def is_word_guessed(secret_word, letters_guessed):
-    '''
-    secret_word: string, the word the user is guessing; assumes all letters are
-      lowercase
-    letters_guessed: list (of letters), which letters have been guessed so far;
-      assumes that all letters are lowercase
-    returns: boolean, True if all the letters of secret_word are in letters_guessed;
-      False otherwise
-    '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
-
-
-
-def get_guessed_word(secret_word, letters_guessed):
     counter = 0
     for index in range(len(secret_word)):
         if secret_word[index] in letters_guessed:
@@ -75,13 +61,24 @@ def get_guessed_word(secret_word, letters_guessed):
     else:
 	return False
     '''
+    secret_word: string, the word the user is guessing; assumes all letters are
+      lowercase
+    letters_guessed: list (of letters), which letters have been guessed so far;
+      assumes that all letters are lowercase
+    returns: boolean, True if all the letters of secret_word are in letters_guessed;
+      False otherwise
+    '''
+    # FILL IN YOUR CODE HERE AND DELETE "pass"
+    
+def get_guessed_word(secret_word, letters_guessed):
+    '''
     secret_word: string, the word the user is guessing
     letters_guessed: list (of letters), which letters have been guessed so far
     returns: string, comprised of letters, underscores (_), and spaces that represents
       which letters in secret_word have been guessed so far.
     '''
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    
+    pass
 
 
 
