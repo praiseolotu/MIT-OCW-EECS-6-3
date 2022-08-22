@@ -71,6 +71,13 @@ def is_word_guessed(secret_word, letters_guessed):
     # FILL IN YOUR CODE HERE AND DELETE "pass"
     
 def get_guessed_word(secret_word, letters_guessed):
+    words = ""
+    for index in range(len(secret_word)):
+	if secret_word[index] in letters_guessed:
+	    words += secret_word[index]
+	else: 
+	    words += "_ "
+    return words
     '''
     secret_word: string, the word the user is guessing
     letters_guessed: list (of letters), which letters have been guessed so far
@@ -78,19 +85,25 @@ def get_guessed_word(secret_word, letters_guessed):
       which letters in secret_word have been guessed so far.
     '''
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+   
 
 
 
 def get_available_letters(letters_guessed):
+    other_alpha = ""
+    print(len(string.ascii_lowercase))
+    for index in range(len(string.ascii_lowercase)):
+	if string.ascii_lowercase[index] in letters_guessed:
+	    pass  
+	else:
+	    other_alpha += string.ascii_lowercase[index]
+    return other_alpha
     '''
     letters_guessed: list (of letters), which letters have been guessed so far
     returns: string (of letters), comprised of letters that represents which letters have not
       yet been guessed.
     '''
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
-    
     
 
 def hangman(secret_word):
