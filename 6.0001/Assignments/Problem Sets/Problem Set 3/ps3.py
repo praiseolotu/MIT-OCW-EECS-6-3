@@ -3,9 +3,9 @@
 # The 6.0001 Word Game
 # Created by: Kevin Luu <luuk> and Jenna Wiens <jwiens>
 #
-# Name          : <your name>
+# Name          : <Olotu Praise Jah>
 # Collaborators : <your collaborators>
-# Time spent    : <total time>
+# Time spent    : <2.5 days>
 
 import math
 import random
@@ -67,7 +67,23 @@ def get_frequency_dict(sequence):
 # Problem #1: Scoring a word
 #
 def get_word_score(word, n):
-    """
+	#initialize important variable
+	word_score = 0
+	word_length = len(str(word.lower()))
+	letter_worth = 0
+	algo_to_score = (7*word_length) - 3 * (n - word_length)
+	
+	for char in word.lower():
+		letter_worth += SCRABBLE_LETTER_VALUES[char]
+		letter_valid = True
+	
+	if algo_to_score > 1:
+		word_score = letter_worth * algo_to_score
+		
+	else:
+		word_score = 1 * letter_worth
+	return word_score
+	"""
     Returns the score for a word. Assumes the word is a
     valid word.
 
@@ -91,8 +107,7 @@ def get_word_score(word, n):
     n: int >= 0
     returns: int >= 0
     """
-    
-    pass  # TO DO... Remove this line when you implement this function
+	
 
 #
 # Make sure you understand how this function works and what it does!
@@ -150,7 +165,17 @@ def deal_hand(n):
 # Problem #2: Update a hand by removing letters
 #
 def update_hand(hand, word):
-    """
+	# Make a top to bottom copy of hand{}
+	updated_hand = hand.copy()
+	
+	if len(updated_hand) == len(hand):
+		print("Copy Successful")
+	for char in word.lower():
+		updated_hand[char] -= 1
+		if updated_hand[char] == 0:
+			del updated_hand[char]
+	return updated_hand
+	"""
     Does NOT assume that hand contains every letter in word at least as
     many times as the letter appears in word. Letters in word that don't
     appear in hand should be ignored. Letters that appear in word more times
@@ -168,13 +193,30 @@ def update_hand(hand, word):
     returns: dictionary (string -> int)
     """
 
-    pass  # TO DO... Remove this line when you implement this function
-
 #
 # Problem #3: Test word validity
 #
 def is_valid_word(word, hand, word_list):
-    """
+	in_word_list = False
+	
+	if word in word_list:
+		in_word_list = True
+	else:
+		in_word_list = False
+		
+	word_dict = get_frequency_dict(word.lower())
+	for key in word_dick.key():
+		if hand.get(key, 0) >= word_dict[key]:
+			in_hand = True
+		else:
+			in_hand = False
+	if in_word_list and in_hand:
+		return True
+	else:
+		return False
+
+			
+"""
     Returns True if word is in the word_list and is entirely
     composed of letters in the hand. Otherwise, returns False.
     Does not mutate hand or word_list.
@@ -185,7 +227,6 @@ def is_valid_word(word, hand, word_list):
     returns: boolean
     """
 
-    pass  # TO DO... Remove this line when you implement this function
 
 #
 # Problem #5: Playing a hand
@@ -332,14 +373,21 @@ def play_game(word_list):
     """
     
     print("play_game not implemented.") # TO DO... Remove this line when you implement this function
-    
-
 
 #
 # Build data structures used for entire session and play game
 # Do not remove the "if __name__ == '__main__':" line - this code is executed
 # when the program is run directly, instead of through an import statement
 #
+
+hand = {'a':1, 'q':1, 'l':2, 'm':1, 'u':1,'i':1}
+display_hand(hand)
+new_hand = update_hand(hand, 'quail')
+print(new_hand)
+
+print(get_word_score("scored", 7))
 if __name__ == '__main__':
     word_list = load_words()
     play_game(word_list)
+
+	
