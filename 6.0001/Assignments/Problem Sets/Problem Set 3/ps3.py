@@ -154,7 +154,7 @@ def deal_hand(n):
     for i in range(num_vowels):
         x = random.choice(VOWELS)
         hand[x] = hand.get(x, 0) + 1
-    
+    hand['*'] = hand.get('*', 0) + 1
     for i in range(num_vowels, n):    
         x = random.choice(CONSONANTS)
         hand[x] = hand.get(x, 0) + 1
@@ -201,11 +201,28 @@ def is_valid_word(word, hand, word_list):
 	
 	if word in word_list:
 		in_word_list = True
+		# Handle for wild card
+	elif 'x' in word:
+		valid_word = []
+		for char in VOWELS:
+			valid_work.append(
+			word[:word.index("*")]
+			+ char
+			+ word[word.index("*") + 1]
+			)
+		num_valid = 0
+		for item in valid_word:
+			if item in word_list:
+				num_valid += 1
+		if num_valid >= 1:
+			in_word_list = True
+		else:
+			in_word_list = False
 	else:
 		in_word_list = False
 		
 	word_dict = get_frequency_dict(word.lower())
-	for key in word_dick.key():
+	for key in word_dict.keys():
 		if hand.get(key, 0) >= word_dict[key]:
 			in_hand = True
 		else:
@@ -232,18 +249,51 @@ def is_valid_word(word, hand, word_list):
 # Problem #5: Playing a hand
 #
 def calculate_handlen(hand):
-    """ 
+	init_hand_length = 0
+	for letter in hand.values():
+		init_hand_length += 1
+	hand_length = init_hand_length
+	
+	return hand_length
+""" 
     Returns the length (number of letters) in the current hand.
     
     hand: dictionary (string-> int)
     returns: integer
     """
-    
-    pass  # TO DO... Remove this line when you implement this function
 
 def play_hand(hand, word_list):
 
-    """
+	point_scored = 0
+	# As long as there are still letters left in the hand
+	
+	while calculate_handlen(hand) > 0:
+		print("Current Hand", sep = " ")
+		display_hand(hand)
+		player_input = input("Enter a word, or '!!' to indicate that you are finished. ")
+		if player_input == "!!":
+			break
+		else:
+			if is_valid_word(player_input, hand, word_list):
+				word_score = get_word_score(player_input, calculate_handlen(hand))
+				point_scored += word_score
+				print("%s earned %d points. Total: %d points" % (player_input, word_score, point_scored))
+			else:
+				# Discard invalid word
+				print("This is not a valid word. Please choose another word")
+				hand = update_hand(hand, player_input)
+				print("\n")
+	if calculate_handlen(hand) == 0:
+		print("Ran out of letters. Total score for hand: %d points" % (point_scored))
+		print("-", *8)
+	else:
+		print("Total score: %d" % (point_scored))
+		print("-", *8)
+		
+	print("\n\n")
+	return point_scored
+	
+"""
     Allows the user to play the given hand, as follows:
 
     * The hand is displayed.
@@ -380,10 +430,6 @@ def play_game(word_list):
 # when the program is run directly, instead of through an import statement
 #
 
-hand = {'a':1, 'q':1, 'l':2, 'm':1, 'u':1,'i':1}
-display_hand(hand)
-new_hand = update_hand(hand, 'quail')
-print(new_hand)
 
 print(get_word_score("scored", 7))
 if __name__ == '__main__':
