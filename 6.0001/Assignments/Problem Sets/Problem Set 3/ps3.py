@@ -366,7 +366,7 @@ def play_hand(hand, word_list):
 #
 
 def substitute_hand(hand, letter):
-    """ 
+    """
     Allow the user to replace all copies of one letter in the hand (chosen by user)
     with a new letter chosen from the VOWELS and CONSONANTS at random. The new letter
     should be different from user's choice, and should not be any of the letters
@@ -382,24 +382,135 @@ def substitute_hand(hand, letter):
         {'h':1, 'e':1, 'o':1, 'x':2} -> if the new letter is 'x'
     The new letter should not be 'h', 'e', 'l', or 'o' since those letters were
     already in the hand.
-    
+
     hand: dictionary (string -> int)
     letter: string
     returns: dictionary (string -> int)
     """
-    
-    pass  # TO DO... Remove this line when you implement this function
-       
-    
+    # Start by defining the pool of letters from which to randomly select
+    # Remove all letters in hand so that regardless of user choice,
+    # none of the origional hand letters can be re-selected
+    full_list = list(VOWELS + CONSONANTS)
+    keys = hand.keys()
+    swap_list = [c for c in full_list if c not in keys]
+    swap_str = "".join(swap_list)
+
+    # randomly select the new letter from the filtered pool of letters
+    x = random.choice(swap_str)
+
+    # copy hand
+    subbed_hand = hand.copy()
+
+    # replace the user selected letter in hand with the random selection
+    subbed_hand[x] = subbed_hand[letter]
+    del subbed_hand[letter]
+
+    return subbed_hand
+
+
+# Additional helper code for play_game function
+
+
+def _get_num_hands():
+    """Ask the user to input the number of hands to play
+    returns a string"""
+    return input("Enter total number of hands: ")
+
+
+def _verify_num_hands(num_hands):
+    """Verify whether num_hands is a valid value
+    Returns bool"""
+    try:
+        if len(num_hands) == 1 and type(int(num_hands)) == int:
+            return True
+        else:
+            raise ValueError
+    except:
+        return False
+
+
+def _ask_for_substitution():
+    """Ask the user if they want to substitute a letter
+    Returns a string"""
+    return input("Would you like to substitute a letter (yes/no)? ")
+
+
+def _verify_substitution_input(subs_choice):
+    """Verify whether subs_choice is a valid value
+    Returns bool"""
+    try:
+        if subs_choice.lower() == "yes" or subs_choice.lower() == "no":
+            return True
+        else:
+            raise ValueError
+    except:
+        return False
+
+
+def _get_sub_letter():
+    """Ask the user what letter to substitute
+    Returns a string"""
+    return input("Which letter would you like to replace? ")
+
+
+def _verify_sub_letter(sub_letter):
+    """Validate that input letter is alpha and single
+    Returns a bool"""
+    try:
+        if sub_letter.lower().isalpha() and len(sub_letter.lower()) == 1:
+            return True
+        else:
+            raise ValueError
+    except:
+        return False
+
+
+def _check_subs_remaining(subs_left):
+    """Assumes subs_left is an integer
+    Returns a bool"""
+    if subs_left == 1:
+        return True
+    else:
+        return False
+
+
+def _check_replays_remaining(replays_left):
+    """Assumes replays_left is an integer
+    Returns a bool"""
+    if replays_left == 1:
+        return True
+    else:
+        return False
+
+
+def _ask_for_replay():
+    """Asks the user whether to replay the hand
+    This can happen only once per game
+    Returns a string"""
+    return input("Would you like to replay the hand (yes/no?)")
+
+
+def _verify_replay_input(replay_choice):
+    """Assumes a string
+    Returns a bool"""
+    try:
+        if replay_choice.lower() == "yes" or replay_choice.lower() == "no":
+            return True
+        else:
+            raise ValueError
+    except:
+        return False
+
+
 def play_game(word_list):
     """
     Allow the user to play a series of hands
 
     * Asks the user to input a total number of hands
 
-    * Accumulates the score for each hand into a total score for the 
+    * Accumulates the score for each hand into a total score for the
       entire series
- 
+
     * For each hand, before playing, ask the user if they want to substitute
       one letter for another. If the user inputs 'yes', prompt them for their
       desired letter. This can only be done once during the game. Once the
@@ -407,8 +518,8 @@ def play_game(word_list):
       substitute letters in the future.
 
     * For each hand, ask the user if they would like to replay the hand.
-      If the user inputs 'yes', they will replay the hand and keep 
-      the better of the two scores for that hand.  This can only be done once 
+      If the user inputs 'yes', they will replay the hand and keep
+      the better of the two scores for that hand.  This can only be done once
       during the game. Once the replay option is used, the user should not
       be asked if they want to replay future hands. Replaying the hand does
       not count as one of the total number of hands the user initially
@@ -416,13 +527,86 @@ def play_game(word_list):
 
             * Note: if you replay a hand, you do not get the option to substitute
                     a letter - you must play whatever hand you just had.
-      
+
     * Returns the total score for the series of hands
 
     word_list: list of lowercase strings
     """
-    
-    print("play_game not implemented.") # TO DO... Remove this line when you implement this function
+
+    # initialize game_score to track score across hands
+    game_score = 0
+
+    # Only one substitution per game can be made
+    subs_remaining = 1
+
+    # Only one hand per game may be replayed
+    replays_remaining = 1
+
+    # Get the number of hands to play from the user & verify the input
+    num_hands = _get_num_hands()
+    print()
+    while True:
+        if _verify_num_hands(num_hands):
+            num_hands = int(num_hands)
+            break
+        else:
+            print("Invalid entry for number of hands.")
+            num_hands = _get_num_hands()
+
+    # Continue play until all hands dealt
+    while num_hands > 0:
+        # Deal the initial hand
+        hand = deal_hand(HAND_SIZE)
+        # Ask whether the player wants to substitute a letter
+        if _check_subs_remaining(subs_remaining):
+            # Display the initial hand
+            print("Current hand: ", end=" "), display_hand(hand)
+            subs_choice = _ask_for_substitution()
+            while True:
+                if _verify_substitution_input(subs_choice):
+                    if subs_choice.lower() == "yes":
+                        sub_letter = _get_sub_letter()
+                        while True:
+                            if _verify_sub_letter(sub_letter):
+                                hand = substitute_hand(hand, sub_letter.lower())
+                                subs_remaining = 0
+                                break
+                            else:
+                                print("Invalid entry for subbed letter.")
+                                sub_letter = _get_sub_letter()
+                        break  # _verify_substitution_input loop
+                    elif subs_choice.lower() == "no":
+                        break
+                else:
+                    print("Invalid entry for substitution.  Should be yes or no")
+                    subs_choice = _ask_for_substitution()
+
+        print()  # blank line
+        # play hand until no letters left or user terminates
+        hand_score = play_hand(hand, word_list)
+
+        # Ask the player whether they want to replay the last hand
+        if _check_replays_remaining(replays_remaining):
+            replay_choice = _ask_for_replay()
+            while True:
+                if _verify_replay_input(replay_choice):
+                    if replay_choice.lower() == "yes":
+                        temp_score = hand_score
+                        hand_score = play_hand(hand, word_list)
+                        if temp_score < hand_score:
+                            temp_score, hand_score = hand_score, temp_score
+                        replays_remaining = 0
+                        break
+                    else:
+                        break
+                else:
+                    print("Invalid entry for replay.  Should be yes or no")
+                    replay_choice = _ask_for_replay()
+
+        game_score += hand_score
+        num_hands -= 1
+    return print("Game over!  Final score: {} points".format(game_score))
+
 
 #
 # Build data structures used for entire session and play game
